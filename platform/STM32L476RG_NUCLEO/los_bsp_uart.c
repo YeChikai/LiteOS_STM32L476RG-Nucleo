@@ -1,5 +1,6 @@
 #include "los_bsp_uart.h"
 #include <stdarg.h>
+#include "los_printf.h"
 
 #ifdef LOS_STM32L476xx
 #include "stm32l4xx_hal.h"
@@ -9,9 +10,10 @@ UART_HandleTypeDef UartHandle;
 static void Error_Handler(void)
 {
     /* Turn LED2 off */
-    BSP_LED_Off(LED2);
+//    BSP_LED_Off(LED2);
     while(1)
     {
+			PRINT_ERR("[%s] ERROR !!! \r\n", __FUNCTION__);
     }
 }
 #endif
@@ -35,9 +37,9 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
     USARTx_TX_GPIO_CLK_ENABLE();
     USARTx_RX_GPIO_CLK_ENABLE();
 
-    /* Select SysClk as source of USART4 clocks */
-    RCC_PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_UART4;
-    RCC_PeriphClkInit.Uart4ClockSelection = RCC_UART4CLKSOURCE_SYSCLK;
+    /* Select SysClk as source of USART1 clocks */
+    RCC_PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
+    RCC_PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_SYSCLK;
     HAL_RCCEx_PeriphCLKConfig(&RCC_PeriphClkInit);
 
     /* Enable USARTx clock */

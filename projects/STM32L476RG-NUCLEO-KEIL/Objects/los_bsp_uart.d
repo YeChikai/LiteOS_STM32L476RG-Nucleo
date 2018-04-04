@@ -34,3 +34,9 @@
 .\objects\los_bsp_uart.o: ..\..\hal\STM32L4xx\Include\stm32l4xx_hal_usart_ex.h
 .\objects\los_bsp_uart.o: ..\..\platform\STM32L476RG_NUCLEO\stm32l4xx_nucleo.h
 .\objects\los_bsp_uart.o: D:\Program Files\Keil5MDK\ARM\ARMCC\Bin\..\include\stdarg.h
+.\objects\los_bsp_uart.o: ..\..\kernel\include\los_printf.h
+.\objects\los_bsp_uart.o: ..\..\kernel\include\los_typedef.h
+.\objects\los_bsp_uart.o: ..\..\kernel\link\keil\los_builddef.h
+.\objects\los_bsp_uart.o: ..\..\example\include\los_demo_debug.h
+.\objects\los_bsp_uart.o: D:\Program Files\Keil5MDK\ARM\ARMCC\Bin\..\include\string.h
+.\objects\los_bsp_uart.o: ..\..\kernel\include\los_printf.h

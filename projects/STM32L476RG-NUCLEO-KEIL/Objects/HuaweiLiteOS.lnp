@@ -43,6 +43,7 @@
 ".\objects\los_api_fs.o"
 ".\objects\startup_stm32l476xx.o"
 ".\objects\main.o"
+".\objects\halldisplay.o"
 ".\objects\system_stm32l4xx.o"
 ".\objects\stm32l4xx_hal.o"
 ".\objects\stm32l4xx_hal_cortex.o"
@@ -63,6 +64,8 @@
 ".\objects\ff.o"
 ".\objects\cc936.o"
 ".\objects\los_fs_adapter.o"
+".\objects\bsp_spi.o"
+".\objects\bsp_elink.o"
 --library_type=microlib --strict --scatter "..\..\platform\STM32L476RG_NUCLEO\STM32L476RG-LiteOS.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

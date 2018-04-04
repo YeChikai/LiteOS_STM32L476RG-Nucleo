@@ -280,16 +280,16 @@ static void LOS_Inspect_TskDeal(void)
      /* output a message on hyperterminal using printf function */
     PRINT_DEBUG("[%s] Los Inspect start...\r\n", __FUNCTION__);
       
-    for(int index = 0;index < LOS_INSPECT_BUFF;index++)
-    {
-        ulRet = LOS_InspectByID((enInspectID)index);
-        if(LOS_OK != ulRet)
-        {
-					gInspectErrCnt++;
+//    for(int index = 0;index < LOS_INSPECT_BUFF;index++)
+//    {
+//        ulRet = LOS_InspectByID((enInspectID)index);
+//        if(LOS_OK != ulRet)
+//        {
+//					gInspectErrCnt++;
 
-					PRINT_ERR("[%s] Inspect ERROR !!! gInspectErrCnt = [%d]\r\n", __FUNCTION__, gInspectErrCnt);
-        }
-    }
+//					PRINT_ERR("[%s] Inspect ERROR !!! gInspectErrCnt = [%d]\r\n", __FUNCTION__, gInspectErrCnt);
+//        }
+//    }
      
     PRINT_DEBUG("[%s] Inspect completed,gInspectErrCnt = [%d]\r\n", __FUNCTION__, gInspectErrCnt);
      

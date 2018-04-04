@@ -9,4 +9,8 @@ extern void LOS_EvbSetup(void);
 extern void LOS_EvbTrace(const char *str);
 
 
+extern void delay_us(unsigned int cnt);
+
+
+
 #endif
