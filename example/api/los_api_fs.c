@@ -89,7 +89,7 @@ void Example_FsTsk(void)
     }
     else
     {
-        LOS_EvbLedControl(LOS_LED1, LED_ON);
+        //LOS_EvbLedControl(LOS_LED1, LED_ON);
         LOS_EvbUartPrintf("\r\nRead sucess buffer = [%s],br = [%d]", buffer,br);
     }
     
@@ -101,15 +101,15 @@ void Example_FsTsk(void)
     
     while(1)
     {
-        LOS_EvbLedControl(LOS_LED3, LED_ON);
+        LOS_EvbLedControl(LOS_LED2, LED_ON);
         Delay(0xffffff);
-        LOS_EvbLedControl(LOS_LED3, LED_OFF);
+        LOS_EvbLedControl(LOS_LED2, LED_OFF);
         Delay(0xffffff);
     }
 }
 
 
-UINT32 Example_FsEntry(void)
+UINT32 Example_Fs_Entry(void)
 {
     UINT32 uwRet;
     TSK_INIT_PARAM_S stTaskInitParam;

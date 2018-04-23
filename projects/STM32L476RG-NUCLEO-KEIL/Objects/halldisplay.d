@@ -1,7 +1,6 @@
 .\objects\halldisplay.o: ..\..\user\HallDisplay.c
 .\objects\halldisplay.o: ..\..\user\HallDisplay.h
 .\objects\halldisplay.o: D:\Program Files\Keil5MDK\ARM\ARMCC\Bin\..\include\stdint.h
-.\objects\halldisplay.o: ..\..\user\ascii.h
 .\objects\halldisplay.o: ..\..\kernel\driver\elink042t2\bsp_elink.h
 .\objects\halldisplay.o: ..\..\kernel\driver\spi\bsp_spi.h
 .\objects\halldisplay.o: ..\..\kernel\include\los_task.h
@@ -55,3 +54,10 @@
 .\objects\halldisplay.o: ..\..\kernel\include\los_tick.h
 .\objects\halldisplay.o: ..\..\kernel\include\los_event.h
 .\objects\halldisplay.o: ..\..\platform\STM32L476RG_NUCLEO\los_bsp_adapter.h
+.\objects\halldisplay.o: ..\..\kernel\driver\flash\eeprom.h
+.\objects\halldisplay.o: ..\..\platform\STM32L476RG_NUCLEO\los_bsp_flash.h
+.\objects\halldisplay.o: ..\..\thirdparty\FatFS\src\diskio.h
+.\objects\halldisplay.o: ..\..\thirdparty\FatFS\src\integer.h
+.\objects\halldisplay.o: ..\..\thirdparty\FatFS\src\ff.h
+.\objects\halldisplay.o: ..\..\thirdparty\FatFS\src\ffconf.h
+.\objects\halldisplay.o: ..\..\user\ascii.h

@@ -8,10 +8,11 @@
   ******************************************************************************/
 	
 #include "HallDisplay.h"
-#include "ascii.h"
-#include "bsp_elink.h"  
-#include "los_demo_debug.h"
 
+#include "bsp_elink.h"
+#include "eeprom.h"
+#include "los_demo_debug.h"
+#include "ascii.h"
  
 uint8_t OldBufferCN[32] = {0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00};
 uint8_t OldBufferEN[16] = {0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00};
@@ -75,7 +76,7 @@ void Elink042_DispChar_CN ( uint16_t usX, uint16_t usY, uint16_t usChar, uint16_
 	uint8_t y_end1 = (usY+HEIGHT_CH_CHAR-1)>> 8; 
 	uint8_t y_end2 = (usY+HEIGHT_CH_CHAR-1)& 0XFF;
 	   
-//  GetGBKCode( ucBuffer, usChar );	//取字模数据
+  GetGBKCode( ucBuffer, usChar );	//取字模数据
 	
 	partial_display(x_start1, x_start2,x_end1, x_end2, y_start1, y_start2, y_end1, y_end2, OldBufferCN, ucBuffer, CN_CHAR_1616_BYTE);
 		
@@ -194,6 +195,28 @@ void ELINK042_DispString_EN_CH ( uint16_t usX, uint16_t usY, const uint8_t * pSt
 	
 	PRINT_DEBUG( "\r\n[%s] Display String complished !!!\r\n", __FUNCTION__ );	
 } 
+
+
+/*******************************************************************************
+* Function Name  : GetGBKCode_from_FLASH
+*******************************************************************************/ 
+int GetGBKCode_from_Flash( uint8_t * pBuffer, uint16_t c)
+{ 
+	unsigned char High8bit,Low8bit;
+	unsigned int pos;
+
+
+	High8bit= c >> 8;     /* 取高8位数据 */
+	Low8bit= c & 0x00FF;  /* 取低8位数据 */	
+
+
+	pos = ((High8bit-0xa0-16)*94+Low8bit-0xa0-1)*2*16;
+	EEPROM_ReadBytes(pos, pBuffer, CN_CHAR_1616_BYTE);
+
+//	PRINT_DEBUG( "High8bit[%02x] Low8bit[%02x] position:[%d] %02x %02x %02x %02x\n", High8bit, Low8bit, pos, pBuffer[0],pBuffer[1],pBuffer[2],pBuffer[3]);
+
+	return 0;       
+}
 
 
 /*********************************************END OF FILE**********************/

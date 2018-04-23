@@ -36,7 +36,7 @@
 #define      CN_CHAR_1616_BYTE		            32		  //中文字符16*16字节数
 
 
-#define      GetGBKCode( ucBuffer, usChar )  GetGBKCode_from_EXFlash( ucBuffer, usChar )  //定义获取中文字符字模数组的函数名，ucBuffer为存放字模数组名，usChar为中文字符（国标码）
+#define      GetGBKCode( ucBuffer, usChar )  GetGBKCode_from_Flash( ucBuffer, usChar )  //定义获取中文字符字模数组的函数名，ucBuffer为存放字模数组名，usChar为中文字符（国标码）
 
 
 
@@ -46,6 +46,7 @@
 void Elink042DispChinaString( uint16_t usX, uint16_t usY, const uint8_t * pStr, uint16_t usColor_Background ); 
 void ELINK042_DispString_EN_CH ( uint16_t usX, uint16_t usY, const uint8_t * pStr, uint16_t usColor_Background );
 
+int GetGBKCode_from_Flash( uint8_t * pBuffer, uint16_t c);
 
 #endif /* __HALL_DISPLAY_H_ */
 

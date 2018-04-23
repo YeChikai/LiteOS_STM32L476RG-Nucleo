@@ -64,9 +64,16 @@
 .\objects\main.o: ..\..\example\include\los_api_timer.h
 .\objects\main.o: ..\..\example\include\los_api_systick.h
 .\objects\main.o: ..\..\example\include\los_api_list.h
+.\objects\main.o: ..\..\example\include\los_api_fs.h
 .\objects\main.o: ..\..\platform\STM32L476RG_NUCLEO\los_bsp_led.h
 .\objects\main.o: ..\..\platform\STM32L476RG_NUCLEO\los_bsp_key.h
 .\objects\main.o: ..\..\kernel\driver\elink042t2\bsp_elink.h
 .\objects\main.o: ..\..\kernel\driver\spi\bsp_spi.h
 .\objects\main.o: ..\..\platform\STM32L476RG_NUCLEO\los_bsp_adapter.h
 .\objects\main.o: ..\..\user\HallDisplay.h
+.\objects\main.o: ..\..\kernel\driver\flash\eeprom.h
+.\objects\main.o: ..\..\platform\STM32L476RG_NUCLEO\los_bsp_flash.h
+.\objects\main.o: ..\..\thirdparty\FatFS\src\diskio.h
+.\objects\main.o: ..\..\thirdparty\FatFS\src\integer.h
+.\objects\main.o: ..\..\thirdparty\FatFS\src\ff.h
+.\objects\main.o: ..\..\thirdparty\FatFS\src\ffconf.h

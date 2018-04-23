@@ -336,7 +336,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,USE_STM32L4XX_NUCLEO,LOS_STM32L476xx,LOS_FLASH</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\kernel\base\include;..\..\kernel\include;..\..\kernel\cpu\arm\cortex-m4;..\..\kernel\config;..\..\kernel\cmsis;..\..\kernel\link\keil;..\..\platform\STM32L476RG_NUCLEO;..\..\example\include;..\..\user;..\..\hal\STM32L4xx\Include;..\..\thirdparty\FatFS\src;..\..\kernel\driver\elink042t2;..\..\kernel\driver\spi;..\..\kernel\driver\esp8266</IncludePath>
+              <IncludePath>..\..\kernel\base\include;..\..\kernel\include;..\..\kernel\cpu\arm\cortex-m4;..\..\kernel\config;..\..\kernel\cmsis;..\..\kernel\link\keil;..\..\platform\STM32L476RG_NUCLEO;..\..\example\include;..\..\user;..\..\hal\STM32L4xx\Include;..\..\thirdparty\FatFS\src;..\..\kernel\driver\elink042t2;..\..\kernel\driver\spi;..\..\kernel\driver\esp8266;..\..\kernel\driver\flash</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -764,6 +764,11 @@
               <FileName>bsp_elink.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\kernel\driver\elink042t2\bsp_elink.c</FilePath>
+            </File>
+            <File>
+              <FileName>eeprom.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\kernel\driver\flash\eeprom.c</FilePath>
             </File>
           </Files>
         </Group>

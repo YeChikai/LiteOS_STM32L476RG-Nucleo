@@ -5,6 +5,7 @@
 
 #include "los_inspect_entry.h"
 #include "los_demo_entry.h"
+#include "los_api_fs.h"
 
 #include "los_bsp_led.h"
 #include "los_bsp_key.h"
@@ -12,6 +13,7 @@
 
 #include "bsp_elink.h" 
 #include "HallDisplay.h"
+#include "eeprom.h"
 
 #include <string.h>
 
@@ -20,10 +22,10 @@
 #define SOFTWARE_VERSION               "V0.1.0"
 #endif
 
-extern void LOS_EvbSetup(void);
+uint8_t aReadBuffer[1024];
 
 static UINT32 g_uwboadTaskID;
-static LITE_OS_SEC_TEXT void LOS_BoardExampleTskfunc(void)
+static LITE_OS_SEC_TEXT void LOS_DisplayDemoTskfunc(void)
 {
 		PRINT_DEBUG("[%s] Enter...\r\n",__FUNCTION__);
 	
@@ -35,9 +37,9 @@ static LITE_OS_SEC_TEXT void LOS_BoardExampleTskfunc(void)
 
 		elink_display_init();
 		
-		ELINK042_DispString_EN_CH( 128, 192, "Hello World...", WHITE); 
-//		ELINK042_DispString_EN_CH( 64, 64, "华为电子标签", WHITE); 
-		ELINK042_DispString_EN_CH( 128, 128, "HuaWei electric tag", WHITE); 
+//		ELINK042_DispString_EN_CH( 128, 192, "Hello World...", WHITE); 
+		ELINK042_DispString_EN_CH( 64, 64, "华为电子标签[20180415]", WHITE);
+//		ELINK042_DispString_EN_CH( 128, 128, "HuaWei electric tag", WHITE); 
 		
 //		PRINT_DEBUG( "\r\n[BIRD] WF-ESP8266 WiFi模块测试...\r\n" );//打印测试例程提示信息
 
@@ -55,7 +57,7 @@ static LITE_OS_SEC_TEXT void LOS_BoardExampleTskfunc(void)
 	
     while (1)
     {
-				PRINT_DEBUG("[%s] Board Hardware Test...\r\n",__FUNCTION__);
+//				PRINT_DEBUG("[%s] Board Hardware Test...\r\n",__FUNCTION__);
 			
         LOS_EvbLedControl(LOS_LED2, LED_ON);
         LOS_TaskDelay(500);
@@ -64,13 +66,13 @@ static LITE_OS_SEC_TEXT void LOS_BoardExampleTskfunc(void)
     }
 }
 
-void LOS_BoardExampleEntry(void)
+void LOS_DisplayDemo_Entry(void)
 {
     UINT32 uwRet;
     TSK_INIT_PARAM_S stTaskInitParam;
 
     (VOID)memset((void *)(&stTaskInitParam), 0, sizeof(TSK_INIT_PARAM_S));
-    stTaskInitParam.pfnTaskEntry = (TSK_ENTRY_FUNC)LOS_BoardExampleTskfunc;
+    stTaskInitParam.pfnTaskEntry = (TSK_ENTRY_FUNC)LOS_DisplayDemoTskfunc;
     stTaskInitParam.uwStackSize = LOSCFG_BASE_CORE_TSK_IDLE_STACK_SIZE;
     stTaskInitParam.pcName = "BoardDemo";
     stTaskInitParam.usTaskPrio = 12;
@@ -78,7 +80,7 @@ void LOS_BoardExampleEntry(void)
 
     if (uwRet != LOS_OK)
     {
-				PRINT_ERR("[%s] BoardExample task create ERROR !!! \r\n", __FUNCTION__);
+				PRINT_ERR("[%s] DisplayDemo task create ERROR !!! \r\n", __FUNCTION__);
         return;
     }
     return;
@@ -122,13 +124,24 @@ int main(void)
         do some hw init that need after systemtick init
      */
     LOS_EvbSetup();	//init the device on the dev baord
-
+		
+//		/* Read chip internal flash(addr:[0x08080000]) by Byte test */
+//		EEPROM_ReadBytes(0, aReadBuffer, 32);
+//		
+//		/* USER CODE END 2 */
+//		for(uint8_t i = 0; i < 32; i++ )
+//		{
+//			printf("\n\r aReadBuffer[%d] = %#02x", i, aReadBuffer[i] );
+//		}
+		
 //    LOS_Demo_Entry();
 
 //    LOS_Inspect_Entry();
 
-    LOS_BoardExampleEntry();
+    LOS_DisplayDemo_Entry();
 
+//		Example_Fs_Entry();
+		
     /* Kernel start to run */
     (void)LOS_Start();
 		
