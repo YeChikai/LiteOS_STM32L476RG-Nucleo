@@ -336,7 +336,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,USE_STM32L4XX_NUCLEO,LOS_STM32L476xx,LOS_FLASH</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\kernel\base\include;..\..\kernel\include;..\..\kernel\cpu\arm\cortex-m4;..\..\kernel\config;..\..\kernel\cmsis;..\..\kernel\link\keil;..\..\platform\STM32L476RG_NUCLEO;..\..\example\include;..\..\user;..\..\hal\STM32L4xx\Include;..\..\thirdparty\FatFS\src</IncludePath>
+              <IncludePath>..\..\kernel\base\include;..\..\kernel\include;..\..\kernel\cpu\arm\cortex-m4;..\..\kernel\config;..\..\kernel\cmsis;..\..\kernel\link\keil;..\..\platform\STM32L476RG_NUCLEO;..\..\example\include;..\..\user;..\..\hal\STM32L4xx\Include;..\..\thirdparty\FatFS\src;..\..\kernel\driver\elink042t2;..\..\kernel\driver\spi;..\..\kernel\driver\esp8266;..\..\kernel\driver\flash</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -635,6 +635,21 @@
               <FileType>1</FileType>
               <FilePath>..\..\user\main.c</FilePath>
             </File>
+            <File>
+              <FileName>HallDisplay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\user\HallDisplay.c</FilePath>
+            </File>
+            <File>
+              <FileName>HallCommon.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\user\HallCommon.c</FilePath>
+            </File>
+            <File>
+              <FileName>HallWIFI.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\user\HallWIFI.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -744,6 +759,31 @@
               <FileName>los_fs_adapter.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\thirdparty\FatFS\src\los_fs_adapter.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>driver</GroupName>
+          <Files>
+            <File>
+              <FileName>bsp_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\kernel\driver\spi\bsp_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_elink.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\kernel\driver\elink042t2\bsp_elink.c</FilePath>
+            </File>
+            <File>
+              <FileName>eeprom.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\kernel\driver\flash\eeprom.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_esp8266.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\kernel\driver\esp8266\bsp_esp8266.c</FilePath>
             </File>
           </Files>
         </Group>

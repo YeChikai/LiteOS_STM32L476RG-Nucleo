@@ -8,6 +8,10 @@
 #include "stm32l4xx_nucleo.h"
 
 /* Exported types ------------------------------------------------------------*/
+
+extern	UART_HandleTypeDef UartHandle;
+extern	UART_HandleTypeDef ESP8266UartHandle;
+
 /* Exported constants --------------------------------------------------------*/
 /* User can use this section to tailor USARTx/UARTx instance used and associated 
    resources */

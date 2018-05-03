@@ -66,7 +66,7 @@ extern "C" {
 
 #define LOS_DEBUG_LEVEL (LOS_INFO_LEVEL + 1)	//5
 
-#define PRINT_LEVEL		LOS_DEBUG_LEVEL	//debug log level macro control
+#define PRINT_LEVEL		LOS_INFO_LEVEL	//debug log level macro control
 
 
 #if PRINT_LEVEL < LOS_DEBUG_LEVEL

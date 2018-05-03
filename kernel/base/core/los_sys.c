@@ -95,7 +95,7 @@ LITE_OS_SEC_TEXT_MINOR UINT32 LOS_MS2Tick(UINT32 uwMillisec)
         return 0xFFFFFFFF;
     }
 
-    return ((UINT64)uwMillisec * LOSCFG_BASE_CORE_TICK_PER_SECOND) / OS_SYS_MS_PER_SECOND;
+    return ((UINT64)uwMillisec * LOSCFG_BASE_CORE_TICK_PER_SECOND) / OS_SYS_MS_PER_SECOND;//OS_SYS_US_PER_SECOND
 }
 
 /*****************************************************************************

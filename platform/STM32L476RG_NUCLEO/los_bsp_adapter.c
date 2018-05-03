@@ -13,6 +13,10 @@
 #include "los_bsp_key.h"
 #include "los_bsp_uart.h"
 
+#include "bsp_esp8266.h"
+#include "bsp_elink.h" 
+#include "HallDisplay.h"
+
 
 #ifdef LOS_STM32L476xx
 #include "stm32l4xx_hal.h"
@@ -24,6 +28,7 @@
 #define INCLUDE_LOS_HEADER
 #ifdef INCLUDE_LOS_HEADER
 #include "los_tick.ph"
+#include "los_sys.ph"
 #include "los_base.h"
 #include "los_task.ph"
 #include "los_swtmr.h"
@@ -41,7 +46,7 @@ const unsigned int sys_clk_freq = 16000000;
 #endif
 
 /* tick count per second , don't change this */
-const unsigned int tick_per_second = 1000;
+const unsigned int tick_per_second = OS_SYS_MS_PER_SECOND;//OS_SYS_US_PER_SECOND OS_SYS_MS_PER_SECOND
 static unsigned int g_ucycle_per_tick = 0;
 
 /*
@@ -57,6 +62,18 @@ const unsigned char g_use_ram_vect = 0;
 extern void LOS_SetTickSycle(unsigned int);
 extern void LOS_TickHandler(void);
 extern unsigned int osGetVectorAddr(void);
+
+
+void delay_us(unsigned int cnt)
+{
+	unsigned int n = 80 ;		//80MHz
+	
+	while(cnt--)
+	{
+		while(n--);
+	}
+
+}
 
 #ifdef LOS_STM32L476xx
 /**
@@ -263,6 +280,7 @@ void LOS_EvbSetup(void)
     LOS_EvbUartInit();
     LOS_EvbLedInit();
     LOS_EvbKeyInit();
+		ESP8266_Init();
 	
     return;
 }
