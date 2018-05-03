@@ -11,9 +11,11 @@
 #include "los_bsp_key.h"
 #include "los_bsp_uart.h"
 
-#include "bsp_elink.h" 
-#include "HallDisplay.h"
 #include "eeprom.h"
+#include "bsp_elink.h" 
+#include "bsp_esp8266.h"
+#include "HallDisplay.h"
+#include "HallWIFI.h"
 
 #include <string.h>
 
@@ -27,7 +29,7 @@ uint8_t aReadBuffer[1024];
 static UINT32 g_uwboadTaskID;
 static LITE_OS_SEC_TEXT void LOS_DisplayDemoTskfunc(void)
 {
-		PRINT_DEBUG("[%s] Enter...\r\n",__FUNCTION__);
+		PRINT_INFO("[%s] Enter...\r\n",__FUNCTION__);
 	
 		/**elink SPI init**/
 		elink_spi_gpio_config();
@@ -38,12 +40,12 @@ static LITE_OS_SEC_TEXT void LOS_DisplayDemoTskfunc(void)
 		elink_display_init();
 		
 //		ELINK042_DispString_EN_CH( 128, 192, "Hello World...", WHITE); 
-		ELINK042_DispString_EN_CH( 64, 64, "华为电子标签[20180415]", WHITE);
+//		ELINK042_DispString_EN_CH( 64, 64, "华为电子标签[20180415] abcdefghijklmn\n\r123456789", WHITE);
 //		ELINK042_DispString_EN_CH( 128, 128, "HuaWei electric tag", WHITE); 
 		
 //		PRINT_DEBUG( "\r\n[BIRD] WF-ESP8266 WiFi模块测试...\r\n" );//打印测试例程提示信息
 
-//		ESP8266_StaTcpClient_UnvarnishTest();
+		ESP8266_StaTcpClient_UnvarnishTest();
 		
 		/************************power off Sequence************************/
 		/**Vcom and data interval setting**/
@@ -58,6 +60,7 @@ static LITE_OS_SEC_TEXT void LOS_DisplayDemoTskfunc(void)
     while (1)
     {
 //				PRINT_DEBUG("[%s] Board Hardware Test...\r\n",__FUNCTION__);
+//				PRINT_DEBUG("%s", strEsp8266_Fram_Record.Data_RX_BUF);
 			
         LOS_EvbLedControl(LOS_LED2, LED_ON);
         LOS_TaskDelay(500);

@@ -157,7 +157,7 @@ void ELINK042_DispString_EN_CH ( uint16_t usX, uint16_t usY, const uint8_t * pSt
 			}			
 		
 		  Elink042_DispChar_EN( usX, usY, * pStr, usColor_Background);
-			PRINT_DEBUG( "\r\n[%s] English char: %c	\r\n",__FUNCTION__, * pStr );
+			PRINT_INFO( "\r\n[%s] English char: %c\r\n",__FUNCTION__, * pStr );
 			
 			usX += WIDTH_EN_CHAR;
 		
@@ -183,7 +183,7 @@ void ELINK042_DispString_EN_CH ( uint16_t usX, uint16_t usY, const uint8_t * pSt
 			usCh = ( usCh << 8 ) + ( usCh >> 8 );		
 
 			Elink042_DispChar_CN( usX, usY, usCh, usColor_Background);
-			PRINT_DEBUG( "\r\n[%s] Chinese char: %ls \r\n",__FUNCTION__, ( uint16_t * ) pStr );
+			PRINT_INFO( "\r\n[%s] Chinese char: %ls \r\n",__FUNCTION__, ( uint16_t * ) pStr );
 			
 			usX += WIDTH_CH_CHAR;
 			
@@ -193,7 +193,7 @@ void ELINK042_DispString_EN_CH ( uint16_t usX, uint16_t usY, const uint8_t * pSt
 		
   }
 	
-	PRINT_DEBUG( "\r\n[%s] Display String complished !!!\r\n", __FUNCTION__ );	
+	PRINT_INFO( "\r\n[%s] Display String complished !!!\r\n", __FUNCTION__ );	
 } 
 
 

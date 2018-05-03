@@ -273,9 +273,9 @@ static void LOS_Inspect_KeyAndLed(UINT32 KeyID,UINT32 LedID)
  *****************************************************************************/
 static void LOS_Inspect_TskDeal(void)
 {
-    UINT32 ulRet = LOS_OK;
+//    UINT32 ulRet = LOS_OK;
      
-    gInspectErrCnt = 0;
+//    gInspectErrCnt = 0;
       
      /* output a message on hyperterminal using printf function */
     PRINT_DEBUG("[%s] Los Inspect start...\r\n", __FUNCTION__);
@@ -290,8 +290,8 @@ static void LOS_Inspect_TskDeal(void)
 //					PRINT_ERR("[%s] Inspect ERROR !!! gInspectErrCnt = [%d]\r\n", __FUNCTION__, gInspectErrCnt);
 //        }
 //    }
-     
-    PRINT_DEBUG("[%s] Inspect completed,gInspectErrCnt = [%d]\r\n", __FUNCTION__, gInspectErrCnt);
+//     
+//    PRINT_DEBUG("[%s] Inspect completed,gInspectErrCnt = [%d]\r\n", __FUNCTION__, gInspectErrCnt);
      
      /* output a message on hyperterminal using printf function */
     PRINT_INFO("[%s] Los Key example: please press the User Key...\r\n", __FUNCTION__);

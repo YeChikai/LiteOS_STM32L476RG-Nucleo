@@ -10,26 +10,36 @@
 
 #include "bsp_esp8266.h"
 
+#include "los_printf.h"
+#include "cmsis_os.h"
+
 
 struct  STRUCT_USARTx_Fram strEsp8266_Fram_Record = { 0 };
 
+UART_HandleTypeDef ESP8266UartHandle;
+
+static void Error_Handler(void)
+{
+    while(1)
+    {
+			PRINT_ERR("[%s] ERROR !!! \r\n", __FUNCTION__);
+    }
+}
 
 /**
   * @brief  ESP8266初始化函数
   * @param  无
   * @retval 无
   */
-void ESP8266_Init ( void )
+void ESP8266_Init( void )
 {
-	ESP8266_GPIO_Config (); 
+	ESP8266_GPIO_Config(); 
 	
-	ESP8266_USART_Config (); 
+	ESP8266_USART_Init(); 	
 	
-	
-	macESP8266_RST_HIGH_LEVEL();
+	macESP8266_RST_HIGH();
 
 	macESP8266_CH_DISABLE();
-	
 	
 }
 
@@ -44,26 +54,24 @@ static void ESP8266_GPIO_Config ( void )
 	/*定义一个GPIO_InitTypeDef类型的结构体*/
 	GPIO_InitTypeDef GPIO_InitStructure;
 
-
 	/* 配置 CH_PD 引脚*/
-	macESP8266_CH_PD_APBxClock_FUN ( macESP8266_CH_PD_CLK, ENABLE ); 
+	__HAL_RCC_GPIOB_CLK_ENABLE();
 											   
-	GPIO_InitStructure.GPIO_Pin = macESP8266_CH_PD_PIN;	
-
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;   
-   
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 
-
-	GPIO_Init ( macESP8266_CH_PD_PORT, & GPIO_InitStructure );	 
+	GPIO_InitStructure.Pin = macESP8266_CH_PD_PIN;	//CS
+	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;    
+	GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH; 
+	GPIO_InitStructure.Pull  = GPIO_NOPULL;
+	
+	HAL_GPIO_Init( macESP8266_CH_PD_PORT, &GPIO_InitStructure );	 
 
 	
-	/* 配置 RST 引脚*/
-	macESP8266_RST_APBxClock_FUN ( macESP8266_RST_CLK, ENABLE ); 
-											   
-	GPIO_InitStructure.GPIO_Pin = macESP8266_RST_PIN;	
-
-	GPIO_Init ( macESP8266_RST_PORT, & GPIO_InitStructure );	 
-
+	/* 配置 RST 引脚*/ 
+  GPIO_InitStructure.Pin = macESP8266_RST_PIN;    // RST
+  GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+	GPIO_InitStructure.Pull  = GPIO_NOPULL;	
+	
+  HAL_GPIO_Init(macESP8266_RST_PORT, &GPIO_InitStructure);
 
 }
 
@@ -73,68 +81,34 @@ static void ESP8266_GPIO_Config ( void )
   * @param  无
   * @retval 无
   */
-static void ESP8266_USART_Config ( void )
+static void ESP8266_USART_Init( void )
 {
-	GPIO_InitTypeDef GPIO_InitStructure;
-	USART_InitTypeDef USART_InitStructure;
-	
-	
-	/* config USART clock */
-	macESP8266_USART_APBxClock_FUN ( macESP8266_USART_CLK, ENABLE );
-	macESP8266_USART_GPIO_APBxClock_FUN ( macESP8266_USART_GPIO_CLK, ENABLE );
-	
-	/* USART GPIO config */
-	/* Configure USART Tx as alternate function push-pull */
-	GPIO_InitStructure.GPIO_Pin =  macESP8266_USART_TX_PIN;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(macESP8266_USART_TX_PORT, &GPIO_InitStructure);  
-  
-	/* Configure USART Rx as input floating */
-	GPIO_InitStructure.GPIO_Pin = macESP8266_USART_RX_PIN;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-	GPIO_Init(macESP8266_USART_RX_PORT, &GPIO_InitStructure);
-	
-	/* USART1 mode config */
-	USART_InitStructure.USART_BaudRate = macESP8266_USART_BAUD_RATE;
-	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-	USART_InitStructure.USART_StopBits = USART_StopBits_1;
-	USART_InitStructure.USART_Parity = USART_Parity_No ;
-	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
-	USART_Init(macESP8266_USARTx, &USART_InitStructure);
-	
-	
-	/* 中断配置 */
-	USART_ITConfig ( macESP8266_USARTx, USART_IT_RXNE, ENABLE ); //使能串口接收中断 
-	USART_ITConfig ( macESP8266_USARTx, USART_IT_IDLE, ENABLE ); //使能串口总线空闲中断 	
+    ESP8266UartHandle.Instance          = macESP8266_USART;
 
-	ESP8266_USART_NVIC_Configuration ();	
-	
-	USART_Cmd(macESP8266_USARTx, ENABLE);	
-	
-}
+    ESP8266UartHandle.Init.BaudRate     = macESP8266_USART_BAUD_RATE;//115200
+    ESP8266UartHandle.Init.WordLength   = UART_WORDLENGTH_8B;
+    ESP8266UartHandle.Init.StopBits     = UART_STOPBITS_1;
+    ESP8266UartHandle.Init.Parity       = UART_PARITY_NONE;
+    ESP8266UartHandle.Init.HwFlowCtl    = UART_HWCONTROL_NONE;
+    ESP8266UartHandle.Init.Mode         = UART_MODE_TX_RX;
+    ESP8266UartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
 
-
-/**
-  * @brief  配置 ESP8266 USART 的 NVIC 中断
-  * @param  无
-  * @retval 无
-  */
-static void ESP8266_USART_NVIC_Configuration ( void )
-{
-	NVIC_InitTypeDef NVIC_InitStructure; 
-	
-	
-	/* Configure the NVIC Preemption Priority Bits */  
-	NVIC_PriorityGroupConfig ( macNVIC_PriorityGroup_x );
-
-	/* Enable the USART2 Interrupt */
-	NVIC_InitStructure.NVIC_IRQChannel = macESP8266_USART_IRQ;	 
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&NVIC_InitStructure);
+    if(HAL_UART_Init(&ESP8266UartHandle) != HAL_OK)
+    {
+        Error_Handler();
+    }
+		
+//		__HAL_UART_ENABLE_IT(&ESP8266UartHandle, USART_IT_RXNE);	//使能串口接收中断
+//		__HAL_UART_ENABLE_IT(&ESP8266UartHandle, USART_IT_IDLE);	//使能串口空闲中断
+		
+//		USART3->ICR |= 1<<4;	//清除IDLE位
+		
+		/*## Configure the NVIC for UART ########################################*/
+    HAL_NVIC_SetPriority((IRQn_Type)(macESP8266_USART_IRQ), 0, 0);
+		
+    HAL_NVIC_EnableIRQ((IRQn_Type)(macESP8266_USART_IRQ));
+		
+		HAL_UART_Receive_IT(&ESP8266UartHandle, &strEsp8266_Fram_Record.ucTmp, 1);	//RX_BUF_MAX_LEN
 
 }
 
@@ -152,9 +126,9 @@ void ESP8266_Rst ( void )
 	 ESP8266_Cmd ( "AT+RST", "OK", "ready", 2500 );   	
 	
 	#else
-	 macESP8266_RST_LOW_LEVEL();
-	 Delay_ms ( 500 ); 
-	 macESP8266_RST_HIGH_LEVEL();
+	 macESP8266_RST_LOW();
+	 osDelay ( 500 ); 
+	 macESP8266_RST_HIGH();
 	 
 	#endif
 
@@ -171,20 +145,20 @@ void ESP8266_Rst ( void )
  *         0，指令发送失败
  * 调用  ：被外部调用
  */
-bool ESP8266_Cmd ( char * cmd, char * reply1, char * reply2, u32 waittime )
+bool ESP8266_Cmd ( char * cmd, char * reply1, char * reply2, uint32_t waittime )
 {    
-	strEsp8266_Fram_Record .InfBit .FramLength = 0;               //从新开始接收新的数据包
+	strEsp8266_Fram_Record.InfBit.FramLength = 0;               //从新开始接收新的数据包
 
-	macESP8266_Usart ( "%s\r\n", cmd );			//通过USART3发送AT命令到WIFI模块
+	macESP8266_Usart( "%s\r\n", cmd );			//通过USART3发送AT命令到WIFI模块
 
 	if ( ( reply1 == 0 ) && ( reply2 == 0 ) )                      //不需要接收数据
 		return true;
 	
-	Delay_ms ( waittime );                 //延时
+	osDelay( waittime );                 //延时
 	
-	strEsp8266_Fram_Record .Data_RX_BUF [ strEsp8266_Fram_Record .InfBit .FramLength ]  = '\0';	//与APP交互透传时无法接收到控制端反馈回来的数据【20180317】
+	strEsp8266_Fram_Record.Data_RX_BUF[ strEsp8266_Fram_Record.InfBit.FramLength ]  = '\0';	//与APP交互透传时无法接收到控制端反馈回来的数据【20180317】
 
-	macPC_Usart( "[%s] %s", __FUNCTION__, strEsp8266_Fram_Record .Data_RX_BUF );	//通过USART1打印WIFI模块的反馈信息到电脑端串口助手
+	macPC_Usart( "[%s] %s", __FUNCTION__, strEsp8266_Fram_Record.Data_RX_BUF );	//通过USART1打印WIFI模块的反馈信息到电脑端串口助手
   
 	if ( ( reply1 != 0 ) && ( reply2 != 0 ) )
 		return ( ( bool ) strstr ( strEsp8266_Fram_Record .Data_RX_BUF, reply1 ) || 
@@ -210,11 +184,14 @@ void ESP8266_AT_Test ( void )
 {
 	char count=0;
 	
-	macESP8266_RST_HIGH_LEVEL();	
-	Delay_ms ( 1000 );
+	macESP8266_RST_HIGH();	
+	osDelay ( 1000 );
+	
 	while ( count < 10 )
 	{
-		if( ESP8266_Cmd ( "AT", "OK", NULL, 500 ) ) return;
+		if( ESP8266_Cmd ( "AT", "OK", NULL, 500 ) ) 
+			return;
+		
 		ESP8266_Rst();
 		++count;
 	}
@@ -529,11 +506,11 @@ bool ESP8266_UnvarnishSend ( void )
  */
 void ESP8266_ExitUnvarnishSend ( void )
 {
-	Delay_ms ( 1000 );
+	osDelay ( 1000 );
 	
 	macESP8266_Usart ( "+++" );
 	
-	Delay_ms ( 500 ); 
+	osDelay ( 500 ); 
 	
 }
 
@@ -549,7 +526,7 @@ void ESP8266_ExitUnvarnishSend ( void )
  *         0，发送失败
  * 调用  ：被外部调用
  */
-bool ESP8266_SendString ( FunctionalState enumEnUnvarnishTx, char * pStr, u32 ulStrLength, ENUM_ID_NO_TypeDef ucId )
+bool ESP8266_SendString ( FunctionalState enumEnUnvarnishTx, char * pStr, uint32_t ulStrLength, ENUM_ID_NO_TypeDef ucId )
 {
 	char cStr [20];
 	bool bRet = false;
@@ -559,10 +536,8 @@ bool ESP8266_SendString ( FunctionalState enumEnUnvarnishTx, char * pStr, u32 ul
 	{
 		macESP8266_Usart ( "%s", pStr );
 		
-		bRet = true;
-		
+		bRet = true;		
 	}
-
 	else
 	{
 		if ( ucId < 5 )
@@ -573,13 +548,12 @@ bool ESP8266_SendString ( FunctionalState enumEnUnvarnishTx, char * pStr, u32 ul
 		
 		ESP8266_Cmd ( cStr, "> ", 0, 100 );
 
-		DBG( "[%s] %s", __FUNCTION__, pStr );
+		PRINT_DEBUG( "[%s] %s", __FUNCTION__, pStr );
 		
 		bRet = ESP8266_Cmd ( pStr, "SEND OK", 0, 500 );
   }
 	
 	return bRet;
-
 }
 
 

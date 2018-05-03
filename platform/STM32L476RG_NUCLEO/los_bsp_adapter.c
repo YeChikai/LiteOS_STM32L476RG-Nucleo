@@ -13,6 +13,7 @@
 #include "los_bsp_key.h"
 #include "los_bsp_uart.h"
 
+#include "bsp_esp8266.h"
 #include "bsp_elink.h" 
 #include "HallDisplay.h"
 
@@ -279,7 +280,8 @@ void LOS_EvbSetup(void)
     LOS_EvbUartInit();
     LOS_EvbLedInit();
     LOS_EvbKeyInit();
-
+		ESP8266_Init();
+	
     return;
 }
 

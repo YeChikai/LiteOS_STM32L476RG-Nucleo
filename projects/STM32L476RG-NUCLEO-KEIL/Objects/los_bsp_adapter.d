@@ -37,16 +37,20 @@
 .\objects\los_bsp_adapter.o: ..\..\hal\STM32L4xx\Include\stm32l4xx_hal_usart.h
 .\objects\los_bsp_adapter.o: ..\..\hal\STM32L4xx\Include\stm32l4xx_hal_usart_ex.h
 .\objects\los_bsp_adapter.o: ..\..\platform\STM32L476RG_NUCLEO\stm32l4xx_nucleo.h
+.\objects\los_bsp_adapter.o: ..\..\kernel\driver\esp8266\bsp_esp8266.h
+.\objects\los_bsp_adapter.o: D:\Program Files\Keil5MDK\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\los_bsp_adapter.o: ..\..\user\HallCommon.h
+.\objects\los_bsp_adapter.o: D:\Program Files\Keil5MDK\ARM\ARMCC\Bin\..\include\stdarg.h
+.\objects\los_bsp_adapter.o: ..\..\kernel\include\los_typedef.h
+.\objects\los_bsp_adapter.o: ..\..\kernel\link\keil\los_builddef.h
+.\objects\los_bsp_adapter.o: ..\..\example\include\los_demo_debug.h
+.\objects\los_bsp_adapter.o: ..\..\kernel\include\los_printf.h
+.\objects\los_bsp_adapter.o: ..\..\example\include\los_demo_debug.h
 .\objects\los_bsp_adapter.o: ..\..\kernel\driver\elink042t2\bsp_elink.h
 .\objects\los_bsp_adapter.o: ..\..\kernel\driver\spi\bsp_spi.h
 .\objects\los_bsp_adapter.o: ..\..\kernel\include\los_task.h
 .\objects\los_bsp_adapter.o: ..\..\kernel\include\los_base.h
-.\objects\los_bsp_adapter.o: ..\..\kernel\link\keil\los_builddef.h
-.\objects\los_bsp_adapter.o: ..\..\kernel\include\los_typedef.h
 .\objects\los_bsp_adapter.o: ..\..\kernel\config\los_config.h
-.\objects\los_bsp_adapter.o: ..\..\kernel\include\los_printf.h
-.\objects\los_bsp_adapter.o: ..\..\example\include\los_demo_debug.h
-.\objects\los_bsp_adapter.o: ..\..\kernel\include\los_printf.h
 .\objects\los_bsp_adapter.o: ..\..\kernel\include\los_list.h
 .\objects\los_bsp_adapter.o: ..\..\kernel\include\los_base.h
 .\objects\los_bsp_adapter.o: ..\..\kernel\include\los_errno.h

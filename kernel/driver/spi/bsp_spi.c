@@ -47,27 +47,27 @@ void SPI4W_WRITECOM(unsigned char INIT_COM)
 	unsigned char TEMPCOM;
 	unsigned char scnt;
 	TEMPCOM=INIT_COM;
-	nCS_H;
-	nCS_L;
-	SCLK_L; 
-	nDC_L;	//0 , CMD; 1 , DATA
+	nCS_H();
+	nCS_L();
+	SCLK_L(); 
+	nDC_L();	//0 , CMD; 1 , DATA
 	
 	for(scnt=0;scnt<8;scnt++)
 	{
 		if(TEMPCOM&0x80)
-			SDA_H;
+			SDA_H();
 		else
-			SDA_L;
+			SDA_L();
 		
 		delay_us(1);
-		SCLK_H;  
+		SCLK_H();  
 		delay_us(1);
-		SCLK_L;   
+		SCLK_L();   
 		TEMPCOM=TEMPCOM<<1;
 		delay_us(1);
 	}
 	
-	nCS_H;  
+	nCS_H();  
 }
 
 
@@ -81,28 +81,28 @@ void SPI4W_WRITEDATA(unsigned char INIT_DATA)
 	unsigned char TEMPCOM;
 	unsigned char scnt;
 	TEMPCOM=INIT_DATA;
-	nCS_H;
-	nCS_L;
-	SCLK_L; 
-	nDC_H;	//0 , CMD; 1 , DATA
+	nCS_H();
+	nCS_L();
+	SCLK_L(); 
+	nDC_H();	//0 , CMD; 1 , DATA
 	
 	for(scnt=0;scnt<8;scnt++)
 	{
 		if(TEMPCOM&0x80)
-			SDA_H;
+			SDA_H();
 		else
-			SDA_L;
+			SDA_L();
 		
 		delay_us(1);
-		SCLK_H;		
+		SCLK_H();		
 		delay_us(1);
-		SCLK_L;
+		SCLK_L();
 		
 		TEMPCOM=TEMPCOM<<1;
 		delay_us(1);
 	}
 	
-	nCS_H; 
+	nCS_H(); 
 }
 
 

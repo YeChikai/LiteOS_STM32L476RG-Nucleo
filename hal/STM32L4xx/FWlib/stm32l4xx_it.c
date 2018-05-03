@@ -41,6 +41,9 @@
 #include "main.h"
 #include "stm32l4xx_it.h"
 
+#include "bsp_esp8266.h"
+
+
 /** @addtogroup STM32L4xx_HAL_Examples
   * @{
   */
@@ -50,6 +53,7 @@
   */
 
 /* Private typedef -----------------------------------------------------------*/
+extern UART_HandleTypeDef ESP8266UartHandle;
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -169,14 +173,25 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief  This function handles PPP interrupt request.
+  * @brief  This function handles UART interrupt request.  
   * @param  None
   * @retval None
+  * @Note   This function is redefined in "main.h" and related to DMA  
+  *         used for USART data transmission     
   */
-/*void PPP_IRQHandler(void)
+void macESP8266_USART_IRQHandler(void)
 {
-}*/
+//	PRINT_DEBUG("[%s] Enter...\r\n",__FUNCTION__);
 
+  HAL_UART_IRQHandler(&ESP8266UartHandle);
+	
+	if( __HAL_UART_GET_IT( &ESP8266UartHandle, USART_IT_IDLE ) == SET )     //数据帧接收完毕
+	{
+    strEsp8266_Fram_Record .InfBit .FramFinishFlag = 1;
+		
+		USART3->ICR |= 1<<4;	//清除IDLE位
+  }		
+}
 
 /**
 * @brief This function handles EXTI line[15:10] interrupts.

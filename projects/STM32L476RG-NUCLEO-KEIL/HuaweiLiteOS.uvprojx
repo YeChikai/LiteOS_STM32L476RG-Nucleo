@@ -640,6 +640,16 @@
               <FileType>1</FileType>
               <FilePath>..\..\user\HallDisplay.c</FilePath>
             </File>
+            <File>
+              <FileName>HallCommon.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\user\HallCommon.c</FilePath>
+            </File>
+            <File>
+              <FileName>HallWIFI.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\user\HallWIFI.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -769,6 +779,11 @@
               <FileName>eeprom.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\kernel\driver\flash\eeprom.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_esp8266.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\kernel\driver\esp8266\bsp_esp8266.c</FilePath>
             </File>
           </Files>
         </Group>

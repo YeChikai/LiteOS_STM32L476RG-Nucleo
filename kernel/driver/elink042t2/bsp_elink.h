@@ -27,19 +27,18 @@
 #define LCD_BS_GPIO_CLK_ENABLE()             	__HAL_RCC_GPIOB_CLK_ENABLE()
 
 
-#define nRST_H 		HAL_GPIO_WritePin( LCD_RST_GPIO_PORT, LCD_RST_GPIO_PIN, GPIO_PIN_SET )  		//PE.14
-#define nRST_L 		HAL_GPIO_WritePin( LCD_RST_GPIO_PORT, LCD_RST_GPIO_PIN, GPIO_PIN_RESET )
+#define nRST_H() 		HAL_GPIO_WritePin( LCD_RST_GPIO_PORT, LCD_RST_GPIO_PIN, GPIO_PIN_SET )  		//PE.14
+#define nRST_L() 		HAL_GPIO_WritePin( LCD_RST_GPIO_PORT, LCD_RST_GPIO_PIN, GPIO_PIN_RESET )
 
-#define nBUSY  		HAL_GPIO_ReadPin(LCD_BUSY_GPIO_PORT, LCD_BUSY_GPIO_PIN) //PE.13
+#define nBUSY()  		HAL_GPIO_ReadPin(LCD_BUSY_GPIO_PORT, LCD_BUSY_GPIO_PIN) //PE.13
 
-#define nBS_H  HAL_GPIO_WritePin( LCD_BS_GPIO_PORT, LCD_BS_GPIO_PIN, GPIO_PIN_SET )			//PE.11
-#define nBS_L  HAL_GPIO_WritePin( LCD_BS_GPIO_PORT, LCD_BS_GPIO_PIN, GPIO_PIN_RESET )
+#define nBS_H()  HAL_GPIO_WritePin( LCD_BS_GPIO_PORT, LCD_BS_GPIO_PIN, GPIO_PIN_SET )			//PE.11
+#define nBS_L()  HAL_GPIO_WritePin( LCD_BS_GPIO_PORT, LCD_BS_GPIO_PIN, GPIO_PIN_RESET )
 
 //#define VPP_H	 GPIO_SetBits(GPIOA, GPIO_PIN_4)		//PA4
 //#define VPP_L	 GPIO_ResetBits(GPIOA, GPIO_PIN_4)
 
 /***************************变量定义******************************/
-
 
 
 /************************** PAD 函数声明********************************/

@@ -1,16 +1,16 @@
-#include "los_bsp_uart.h"
 #include <stdarg.h>
+#include "los_bsp_uart.h"
 #include "los_printf.h"
+#include "bsp_esp8266.h"
 
 #ifdef LOS_STM32L476xx
 #include "stm32l4xx_hal.h"
 #include "stm32l4xx_nucleo.h"
 
 UART_HandleTypeDef UartHandle;
+
 static void Error_Handler(void)
 {
-    /* Turn LED2 off */
-//    BSP_LED_Off(LED2);
     while(1)
     {
 			PRINT_ERR("[%s] ERROR !!! \r\n", __FUNCTION__);
@@ -32,34 +32,68 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 
     RCC_PeriphCLKInitTypeDef RCC_PeriphClkInit;
 
-    /*##-1- Enable peripherals and GPIO Clocks #################################*/
-    /* Enable GPIO TX/RX clock */
-    USARTx_TX_GPIO_CLK_ENABLE();
-    USARTx_RX_GPIO_CLK_ENABLE();
+		if(huart->Instance == USARTx)
+		{
+			/*##-1- Enable peripherals and GPIO Clocks #################################*/
+			/* Enable GPIO TX/RX clock */
+			USARTx_TX_GPIO_CLK_ENABLE();
+			USARTx_RX_GPIO_CLK_ENABLE();
 
-    /* Select SysClk as source of USART1 clocks */
-    RCC_PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
-    RCC_PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_SYSCLK;
-    HAL_RCCEx_PeriphCLKConfig(&RCC_PeriphClkInit);
+			/* Select SysClk as source of USART1 clocks */
+			RCC_PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
+			RCC_PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_SYSCLK;
+			HAL_RCCEx_PeriphCLKConfig(&RCC_PeriphClkInit);
 
-    /* Enable USARTx clock */
-    USARTx_CLK_ENABLE();
+			/* Enable USARTx clock */
+			USARTx_CLK_ENABLE();
 
-    /*##-2- Configure peripheral GPIO ##########################################*/
-    /* UART TX GPIO pin configuration  */
-    GPIO_InitStruct.Pin       = USARTx_TX_PIN;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_PULLUP;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    GPIO_InitStruct.Alternate = USARTx_TX_AF;
+			/*##-2- Configure peripheral GPIO ##########################################*/
+			/* UART TX GPIO pin configuration  */
+			GPIO_InitStruct.Pin       = USARTx_TX_PIN;
+			GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+			GPIO_InitStruct.Pull = GPIO_PULLUP;
+			GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+			GPIO_InitStruct.Alternate = USARTx_TX_AF;
 
-    HAL_GPIO_Init(USARTx_TX_GPIO_PORT, &GPIO_InitStruct);
+			HAL_GPIO_Init(USARTx_TX_GPIO_PORT, &GPIO_InitStruct);
 
-    /* UART RX GPIO pin configuration  */
-    GPIO_InitStruct.Pin = USARTx_RX_PIN;
-    GPIO_InitStruct.Alternate = USARTx_RX_AF;
+			/* UART RX GPIO pin configuration  */
+			GPIO_InitStruct.Pin = USARTx_RX_PIN;
+			GPIO_InitStruct.Alternate = USARTx_RX_AF;
 
-    HAL_GPIO_Init(USARTx_RX_GPIO_PORT, &GPIO_InitStruct);
+			HAL_GPIO_Init(USARTx_RX_GPIO_PORT, &GPIO_InitStruct);			
+		}
+		else if(huart->Instance == macESP8266_USART)
+		{
+			/*##-1- Enable peripherals and GPIO Clocks #################################*/	
+			macESP8266_USART_GPIO_CLK_ENABLE();
+					
+			/* Select SysClk as source of USART3 clocks */
+			RCC_PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART3;
+			RCC_PeriphClkInit.Usart3ClockSelection = RCC_USART3CLKSOURCE_SYSCLK;
+			HAL_RCCEx_PeriphCLKConfig(&RCC_PeriphClkInit);
+
+			/* Enable USARTx clock */
+			macESP8266_USART_CLK_ENABLE();
+		
+			/* USART GPIO config */
+			/* Configure USART Tx as alternate function push-pull */
+			GPIO_InitStruct.Pin =  macESP8266_USART_TX_PIN;
+			GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+			GPIO_InitStruct.Pull = GPIO_PULLUP;
+			GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+			GPIO_InitStruct.Alternate = macESP8266_USART_TX_AF;
+			
+			HAL_GPIO_Init(macESP8266_USART_TX_PORT, &GPIO_InitStruct);
+			
+			/* Configure USART Rx as input floating */
+			GPIO_InitStruct.Pin = macESP8266_USART_RX_PIN;
+			GPIO_InitStruct.Alternate = macESP8266_USART_RX_AF;
+			
+			HAL_GPIO_Init(macESP8266_USART_RX_PORT, &GPIO_InitStruct);		
+		}
+		
+		return;
 }
 
 /**
@@ -184,3 +218,24 @@ void LOS_EvbUartPrintf(char* fmt, ...)
 #endif
     return;
 }
+
+/**
+  * @brief Rx Transfer completed callback.
+  * @param huart UART handle.
+  * @retval None
+  */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+     
+  /* NOTE : This function should not be modified, when the callback is needed,
+            the HAL_UART_RxCpltCallback can be implemented in the user file.
+   */
+//	PRINT_DEBUG("[%s] Enter... ucTmp = %c \r\n", __FUNCTION__, strEsp8266_Fram_Record.ucTmp);
+	
+	if ( strEsp8266_Fram_Record .InfBit .FramLength < ( RX_BUF_MAX_LEN - 1 ) )                       //Ô¤Áô1¸ö×Ö½ÚÐ´½áÊø·û
+		strEsp8266_Fram_Record .Data_RX_BUF [ strEsp8266_Fram_Record .InfBit .FramLength ++ ]  = strEsp8266_Fram_Record.ucTmp;
+
+	HAL_UART_Receive_IT(&ESP8266UartHandle, &strEsp8266_Fram_Record.ucTmp, 1);	//RX_BUF_MAX_LEN
+	
+}
+

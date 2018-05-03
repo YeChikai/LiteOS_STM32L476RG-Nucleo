@@ -1,9 +1,9 @@
 .\objects\los_bsp_key.o: ..\..\platform\STM32L476RG_NUCLEO\los_bsp_key.c
 .\objects\los_bsp_key.o: ..\..\platform\STM32L476RG_NUCLEO\los_bsp_key.h
 .\objects\los_bsp_key.o: ..\..\example\include\los_demo_debug.h
+.\objects\los_bsp_key.o: D:\Program Files\Keil5MDK\ARM\ARMCC\Bin\..\include\string.h
 .\objects\los_bsp_key.o: ..\..\kernel\include\los_typedef.h
 .\objects\los_bsp_key.o: ..\..\kernel\link\keil\los_builddef.h
-.\objects\los_bsp_key.o: D:\Program Files\Keil5MDK\ARM\ARMCC\Bin\..\include\string.h
 .\objects\los_bsp_key.o: ..\..\platform\STM32L476RG_NUCLEO\los_bsp_uart.h
 .\objects\los_bsp_key.o: ..\..\hal\STM32L4xx\Include\stm32l4xx_hal.h
 .\objects\los_bsp_key.o: ..\..\hal\STM32L4xx\Include\stm32l4xx_hal_conf.h

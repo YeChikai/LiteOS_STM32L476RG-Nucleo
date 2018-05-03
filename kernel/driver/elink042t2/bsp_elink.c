@@ -144,11 +144,11 @@ void elink_epd_w21_reset(void)
 {
 	PRINT_DEBUG( "[%s] Enter...\r\n",__FUNCTION__ );
 	
-	nBS_L;				//4 wire spi mode selected
+	nBS_L();				//4 wire spi mode selected
 	
-	nRST_L;				//module reset	
+	nRST_L();				//module reset	
 	osDelay(1000);
-	nRST_H;
+	nRST_H();
 	osDelay(1000);
 	
 	PRINT_DEBUG( "[%s] Exit...\r\n",__FUNCTION__ );
@@ -167,7 +167,7 @@ void elink_check_busy_status(void)
 	do
 	{
 		SPI4W_WRITECOM(0x71);//Get Status (FLG)
-		busy = nBUSY;
+		busy = nBUSY();
 		busy =!(busy & 0x01);        
 	}
 	while(busy);   

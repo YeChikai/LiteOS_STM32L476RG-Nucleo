@@ -39,8 +39,8 @@
 #ifndef _LOS_DEMO_DEBUG_H
 #define _LOS_DEMO_DEBUG_H
 
-#include "los_typedef.h"
 #include <string.h>
+#include "los_typedef.h"
 #include "los_bsp_uart.h"
 #include "los_printf.h"
 

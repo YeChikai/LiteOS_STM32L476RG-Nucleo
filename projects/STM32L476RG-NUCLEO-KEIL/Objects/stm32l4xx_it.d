@@ -34,3 +34,14 @@
 .\objects\stm32l4xx_it.o: ..\..\hal\STM32L4xx\Include\stm32l4xx_hal_usart_ex.h
 .\objects\stm32l4xx_it.o: ..\..\platform\STM32L476RG_NUCLEO\stm32l4xx_nucleo.h
 .\objects\stm32l4xx_it.o: ..\..\hal\STM32L4xx\Include\stm32l4xx_it.h
+.\objects\stm32l4xx_it.o: ..\..\kernel\driver\esp8266\bsp_esp8266.h
+.\objects\stm32l4xx_it.o: D:\Program Files\Keil5MDK\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\stm32l4xx_it.o: D:\Program Files\Keil5MDK\ARM\ARMCC\Bin\..\include\string.h
+.\objects\stm32l4xx_it.o: ..\..\user\HallCommon.h
+.\objects\stm32l4xx_it.o: D:\Program Files\Keil5MDK\ARM\ARMCC\Bin\..\include\stdarg.h
+.\objects\stm32l4xx_it.o: ..\..\kernel\include\los_typedef.h
+.\objects\stm32l4xx_it.o: ..\..\kernel\link\keil\los_builddef.h
+.\objects\stm32l4xx_it.o: ..\..\example\include\los_demo_debug.h
+.\objects\stm32l4xx_it.o: ..\..\platform\STM32L476RG_NUCLEO\los_bsp_uart.h
+.\objects\stm32l4xx_it.o: ..\..\kernel\include\los_printf.h
+.\objects\stm32l4xx_it.o: ..\..\example\include\los_demo_debug.h
