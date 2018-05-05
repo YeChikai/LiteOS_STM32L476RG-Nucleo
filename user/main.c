@@ -40,7 +40,7 @@ static LITE_OS_SEC_TEXT void LOS_DisplayDemoTskfunc(void)
 		elink_display_init();
 		
 //		ELINK042_DispString_EN_CH( 128, 192, "Hello World...", WHITE); 
-//		ELINK042_DispString_EN_CH( 64, 64, "华为电子标签[20180415] abcdefghijklmn\n\r123456789", WHITE);
+		ELINK042_DispString_EN_CH( 64, 64, "华为电子标签[20180415] abcdefghijklmn\r\n123456789", WHITE);
 //		ELINK042_DispString_EN_CH( 128, 128, "HuaWei electric tag", WHITE); 
 		
 //		PRINT_DEBUG( "\r\n[BIRD] WF-ESP8266 WiFi模块测试...\r\n" );//打印测试例程提示信息

@@ -61,7 +61,7 @@ void elink_display_init(void);
 void elink_framebuffer_display(const unsigned char * pStr);
 
 void  partial_display(UINT8 x_start1, UINT8 x_start2, UINT8 x_end1, UINT8 x_end2, UINT8 y_start1, UINT8 y_start2, UINT8 y_end1, UINT8 y_end2, UINT8* pOldBuff, UINT8* pNewBuff, UINT16 length);
-
+void	partial_clean_line(uint16_t usX, uint16_t usY);
 
 
 #endif /* __LED_H_ */

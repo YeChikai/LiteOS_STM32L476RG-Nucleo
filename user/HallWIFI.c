@@ -25,8 +25,8 @@ void ESP8266_StaTcpClient_UnvarnishTest ( void )
 	uint8_t ucId, ucLen;
 	uint8_t ucLed1Status = 0, ucLed2Status = 0, ucLed3Status = 0, ucBuzzerStatus = 0;
 
-	char cStr [ 100 ] = { 0 }, cCh;
-
+	char cStr[ 100 ] = { 0 }, cCh;
+	char cInfo[ 100 ] = { 0 };
   char * pCh, * pCh1;
 
   PRINT_INFO( "\r\n[%s] 正在配置 ESP8266 ......\r\n", __FUNCTION__ );
@@ -37,15 +37,15 @@ void ESP8266_StaTcpClient_UnvarnishTest ( void )
 	
 	ESP8266_Net_Mode_Choose( AP );
 
-  while ( ! ESP8266_CIPAP ( macUser_ESP8266_TcpServer_IP ) );
+  while ( ! ESP8266_CIPAP( macUser_ESP8266_TcpServer_IP ) );
 
-  while ( ! ESP8266_BuildAP ( macUser_ESP8266_BulitApSsid, macUser_ESP8266_BulitApPwd, macUser_ESP8266_BulitApEcn ) );	
+  while ( ! ESP8266_BuildAP( macUser_ESP8266_BulitApSsid, macUser_ESP8266_BulitApPwd, macUser_ESP8266_BulitApEcn ) );	
 	
-	ESP8266_Enable_MultipleId ( ENABLE );
+	ESP8266_Enable_MultipleId( ENABLE );
 	
-	while ( !	ESP8266_StartOrShutServer ( ENABLE, macUser_ESP8266_TcpServer_Port, macUser_ESP8266_TcpServer_OverTime ) );
+	while ( !	ESP8266_StartOrShutServer( ENABLE, macUser_ESP8266_TcpServer_Port, macUser_ESP8266_TcpServer_OverTime ) );
 
-	ESP8266_Inquire_ApIp ( cStr, 20 );
+	ESP8266_Inquire_ApIp( cStr, 20 );
 	PRINT_INFO( "\r\n本模块WIFI为%s，密码开放\r\nAP IP 为：%s，开启的端口为：%s\r\n手机网络助手连接该 IP 和端口，最多可连接5个客户端\r\n",
            macUser_ESP8266_BulitApSsid, cStr, macUser_ESP8266_TcpServer_Port );
 	
@@ -58,9 +58,9 @@ void ESP8266_StaTcpClient_UnvarnishTest ( void )
 		if ( strEsp8266_Fram_Record.InfBit.FramFinishFlag )
 		{
 //			__HAL_UART_DISABLE_IT(&ESP8266UartHandle, USART_IT_RXNE);	//禁用串口接收中断
-			strEsp8266_Fram_Record .Data_RX_BUF [ strEsp8266_Fram_Record .InfBit .FramLength ]  = '\0';
+			strEsp8266_Fram_Record.Data_RX_BUF[ strEsp8266_Fram_Record.InfBit.FramLength ]  = '\0';
 			
-//			PRINT_INFO( "\r\n[%s] %s\r\n", __FUNCTION__, strEsp8266_Fram_Record .Data_RX_BUF );
+			PRINT_INFO( "\r\n[%s] %s\r\n", __FUNCTION__, strEsp8266_Fram_Record .Data_RX_BUF );
 			osDelay(10);
 			
 			if ( ( pCh = strstr ( strEsp8266_Fram_Record .Data_RX_BUF, "CMD_LED_" ) ) != 0 ) 
@@ -163,6 +163,10 @@ void ESP8266_StaTcpClient_UnvarnishTest ( void )
 					ucLen = pCh1 - pCh + 12;
 					memcpy( cStr, pCh, ucLen );
 					cStr[ ucLen ] = '\0';
+					
+					memcpy( cInfo, pCh + strlen( "CMD_UART_" ), pCh1 - pCh - strlen( "CMD_UART_" ) );
+					cInfo[ pCh1 - pCh - strlen( "CMD_UART_" ) ] = '\0';
+					ELINK042_DispString_EN_CH( 0, 128, (const uint8_t *)cInfo, WHITE); //display CMD infomation on the Elink ePaper					
 				}
 			}			
 				

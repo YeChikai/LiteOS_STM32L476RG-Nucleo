@@ -87,43 +87,8 @@ extern struct  STRUCT_USARTx_Fram                                  //´®¿ÚÊý¾ÝÖ¡µ
 
 #endif
 
-/******************************** ESP8266 ´®¿ÚÅäÖÃ ***********************************/
-#define      macESP8266_USART_BAUD_RATE                      115200
-#define      macESP8266_USART                                USART3
-
-#define 		macESP8266_USART_TX_AF                    GPIO_AF7_USART3
-#define 		macESP8266_USART_RX_AF                    GPIO_AF7_USART3
-
-#define			macESP8266_USART_CLK_ENABLE()             __HAL_RCC_USART3_CLK_ENABLE()
-
-#if 1
-#define      macESP8266_USART_TX_PORT                         GPIOB   
-#define      macESP8266_USART_TX_PIN                          GPIO_PIN_10
-
-#define      macESP8266_USART_RX_PORT                         GPIOB
-#define      macESP8266_USART_RX_PIN                          GPIO_PIN_11
-
-#define 		 macESP8266_USART_GPIO_CLK_ENABLE()     		__HAL_RCC_GPIOB_CLK_ENABLE()
-
-#else
-
-#define      macESP8266_USART_TX_PORT                         GPIOC  
-#define      macESP8266_USART_TX_PIN                          GPIO_PIN_10
-
-#define      macESP8266_USART_RX_PORT                         GPIOC
-#define      macESP8266_USART_RX_PIN                          GPIO_PIN_11
-
-#define 		 macESP8266_USART_GPIO_CLK_ENABLE()     		__HAL_RCC_GPIOC_CLK_ENABLE()
-
-#endif
-
-#define      macESP8266_USART_IRQ                             USART3_IRQn
-#define      macESP8266_USART_IRQHandler                      USART3_IRQHandler
-
 
 /*********************************************** ESP8266 º¯Êýºê¶¨Òå *******************************************/
-#define     macESP8266_Usart( fmt, ... )           USART_printf ( &ESP8266UartHandle, fmt, ##__VA_ARGS__ ) 
-#define     macPC_Usart( fmt, ... )                printf( fmt, ##__VA_ARGS__ )    
 
 #define     macESP8266_CH_ENABLE()            HAL_GPIO_WritePin( macESP8266_CH_PD_PORT, macESP8266_CH_PD_PIN, GPIO_PIN_SET )
 #define     macESP8266_CH_DISABLE()           HAL_GPIO_WritePin( macESP8266_CH_PD_PORT, macESP8266_CH_PD_PIN, GPIO_PIN_RESET )

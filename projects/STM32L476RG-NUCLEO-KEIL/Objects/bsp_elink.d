@@ -54,5 +54,6 @@
 .\objects\bsp_elink.o: ..\..\kernel\include\los_event.h
 .\objects\bsp_elink.o: ..\..\platform\STM32L476RG_NUCLEO\los_bsp_adapter.h
 .\objects\bsp_elink.o: ..\..\user\DisplayBuffer.h
+.\objects\bsp_elink.o: ..\..\user\HallDisplay.h
 .\objects\bsp_elink.o: ..\..\kernel\cmsis\cmsis_os.h
 .\objects\bsp_elink.o: D:\Program Files\Keil5MDK\ARM\ARMCC\Bin\..\include\stddef.h

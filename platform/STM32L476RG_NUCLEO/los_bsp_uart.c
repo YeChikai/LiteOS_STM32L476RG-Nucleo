@@ -106,15 +106,30 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
   */
 void HAL_UART_MspDeInit(UART_HandleTypeDef *huart)
 {
-    /*##-1- Reset peripherals ##################################################*/
-    USARTx_FORCE_RESET();
-    USARTx_RELEASE_RESET();
+		if(huart->Instance == USARTx)
+		{
+			/*##-1- Reset peripherals ##################################################*/
+			USARTx_FORCE_RESET();
+			USARTx_RELEASE_RESET();
 
-    /*##-2- Disable peripherals and GPIO Clocks #################################*/
-    /* Configure UART Tx as alternate function  */
-    HAL_GPIO_DeInit(USARTx_TX_GPIO_PORT, USARTx_TX_PIN);
-    /* Configure UART Rx as alternate function  */
-    HAL_GPIO_DeInit(USARTx_RX_GPIO_PORT, USARTx_RX_PIN);
+			/*##-2- Disable peripherals and GPIO Clocks #################################*/
+			/* Configure UART Tx as alternate function  */
+			HAL_GPIO_DeInit(USARTx_TX_GPIO_PORT, USARTx_TX_PIN);
+			/* Configure UART Rx as alternate function  */
+			HAL_GPIO_DeInit(USARTx_RX_GPIO_PORT, USARTx_RX_PIN);		
+		}
+		else	if(huart->Instance == macESP8266_USART)
+		{
+			/*##-1- Reset peripherals ##################################################*/
+			macESP8266_USART_FORCE_RESET();
+			macESP8266_USART_RELEASE_RESET();
+
+			/*##-2- Disable peripherals and GPIO Clocks #################################*/
+			/* Configure UART Tx as alternate function  */
+			HAL_GPIO_DeInit(macESP8266_USART_TX_PORT, macESP8266_USART_TX_PIN);
+			/* Configure UART Rx as alternate function  */
+			HAL_GPIO_DeInit(macESP8266_USART_RX_PORT, macESP8266_USART_RX_PIN);		
+		}
 
 }
 
@@ -230,10 +245,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   /* NOTE : This function should not be modified, when the callback is needed,
             the HAL_UART_RxCpltCallback can be implemented in the user file.
    */
-//	PRINT_DEBUG("[%s] Enter... ucTmp = %c \r\n", __FUNCTION__, strEsp8266_Fram_Record.ucTmp);
+	PRINT_DEBUG("[%s] Enter... ucTmp = %c \r\n", __FUNCTION__, strEsp8266_Fram_Record.ucTmp);
 	
-	if ( strEsp8266_Fram_Record .InfBit .FramLength < ( RX_BUF_MAX_LEN - 1 ) )                       //Ô¤Áô1¸ö×Ö½ÚÐ´½áÊø·û
-		strEsp8266_Fram_Record .Data_RX_BUF [ strEsp8266_Fram_Record .InfBit .FramLength ++ ]  = strEsp8266_Fram_Record.ucTmp;
+	if ( strEsp8266_Fram_Record.InfBit.FramLength < ( RX_BUF_MAX_LEN - 1 ) )                       //Ô¤Áô1¸ö×Ö½ÚÐ´½áÊø·û
+		strEsp8266_Fram_Record.Data_RX_BUF[ strEsp8266_Fram_Record.InfBit.FramLength ++ ]  = strEsp8266_Fram_Record.ucTmp;
 
 	HAL_UART_Receive_IT(&ESP8266UartHandle, &strEsp8266_Fram_Record.ucTmp, 1);	//RX_BUF_MAX_LEN
 	

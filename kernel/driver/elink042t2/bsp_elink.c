@@ -9,7 +9,7 @@
 
 #include "bsp_elink.h"   
 #include "DisplayBuffer.h"
-
+#include "HallDisplay.h"
 #include "cmsis_os.h"
 #include "los_demo_debug.h"
 
@@ -482,14 +482,14 @@ void partial_display(UINT8 x_start1, UINT8 x_start2, UINT8 x_end1, UINT8 x_end2,
 
 		PRINT_DEBUG( "\r\n[%s] Enter...\r\n",__FUNCTION__ );	
 		
-//		SPI4W_WRITECOM(0X50);
-//		SPI4W_WRITEDATA(0x47);	//0x47 White background; 0x17 Black background
+		SPI4W_WRITECOM(0X50);
+		SPI4W_WRITEDATA(0x47);	//0x47 White background; 0x17 Black background
 
-//		lut1();		
+		lut1();		
 
 		SPI4W_WRITECOM(0x91);			//enter partial display mode
-
-		SPI4W_WRITECOM(0x90);			//resolution setting	
+		SPI4W_WRITECOM(0x90);			//resolution setting
+	
 		SPI4W_WRITEDATA (x_start1); 		//x-start[8]
 		SPI4W_WRITEDATA (x_start2);    //x-start[7:0]
 		SPI4W_WRITEDATA (x_end1); 			//x-end[8]  
@@ -513,8 +513,7 @@ void partial_display(UINT8 x_start1, UINT8 x_start2, UINT8 x_end1, UINT8 x_end2,
 		{
 			SPI4W_WRITEDATA(*(pNewBuff+i));  
 		}  
-		PRINT_DEBUG( "\r\n[%s] Finish sending buffers...\r\n",__FUNCTION__ );	
-		
+		PRINT_DEBUG( "\r\n[%s] Finish sending buffers...\r\n",__FUNCTION__ );			
 	
 		SPI4W_WRITECOM(0x12);			//DISPLAY REFRESH 		             
 		//osDelay(100);
@@ -524,6 +523,61 @@ void partial_display(UINT8 x_start1, UINT8 x_start2, UINT8 x_end1, UINT8 x_end2,
 		PRINT_DEBUG( "\r\n[%s] Exit...\r\n",__FUNCTION__ );	
 }
 
+
+/***************************partial clean function*************************************/
+void partial_clean_line(uint16_t usX, uint16_t usY)
+{
+		unsigned int i;
+
+		uint8_t x_start1 = usX >> 8;
+		uint8_t x_start2 = usX & 0XFF;
+		uint8_t x_end1 = (ELINK042_DispWindow_COLUMN-1)>> 8;		//WIDTH_EN_CHAR
+		uint8_t x_end2 = (ELINK042_DispWindow_COLUMN-1)& 0XFF; //WIDTH_EN_CHAR
+		
+		uint8_t y_start1 = usY >> 8;
+		uint8_t y_start2 = usY & 0XFF;
+		uint8_t y_end1 = (usY+HEIGHT_EN_CHAR-1)>> 8; 
+		uint8_t y_end2 = (usY+HEIGHT_EN_CHAR-1)& 0XFF;	
+	
+		PRINT_DEBUG( "\r\n[%s] Enter...\r\n",__FUNCTION__ );	
+
+		SPI4W_WRITECOM(0X50);
+		SPI4W_WRITEDATA(0xf7);	//0x47 White background; 0x17 Black background
+//		lut1();	
+	
+		SPI4W_WRITECOM(0x91);			//enter partial display mode
+		SPI4W_WRITECOM(0x90);			//resolution setting
+	
+		SPI4W_WRITEDATA (x_start1); 		//x-start[8]
+		SPI4W_WRITEDATA (x_start2);    //x-start[7:0]
+		SPI4W_WRITEDATA (x_end1); 			//x-end[8]  
+		SPI4W_WRITEDATA (x_end2);   		//x-end[7:0] 
+
+		SPI4W_WRITEDATA (y_start1); 		//y-start[8]
+		SPI4W_WRITEDATA (y_start2);    //y-start[7:0]
+		SPI4W_WRITEDATA (y_end1); 			//y-end[8]
+		SPI4W_WRITEDATA (y_end2);   		//y-end[7:0]
+
+		//partial display pic
+		SPI4W_WRITECOM(0x10);
+		for(i=0; i<2*(400-usX); i++)	  //32 CN; 16 EN
+		{
+			SPI4W_WRITEDATA(0x00);  
+		}  
+
+		SPI4W_WRITECOM(0x13);
+		for(i=0; i<2*(400-usX); i++)	     
+		{
+			SPI4W_WRITEDATA(0xFF);  
+		}  
+	
+		SPI4W_WRITECOM(0x12);			//DISPLAY REFRESH 		             
+		//osDelay(100);
+		
+		elink_check_busy_status();
+		
+		PRINT_DEBUG( "\r\n[%s] Exit...\r\n",__FUNCTION__ );	
+}
 
 
 /*********************************************END OF FILE**********************/

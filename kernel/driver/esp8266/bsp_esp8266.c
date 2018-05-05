@@ -97,19 +97,20 @@ static void ESP8266_USART_Init( void )
     {
         Error_Handler();
     }
-		
-//		__HAL_UART_ENABLE_IT(&ESP8266UartHandle, USART_IT_RXNE);	//使能串口接收中断
-//		__HAL_UART_ENABLE_IT(&ESP8266UartHandle, USART_IT_IDLE);	//使能串口空闲中断
-		
-//		USART3->ICR |= 1<<4;	//清除IDLE位
-		
+
 		/*## Configure the NVIC for UART ########################################*/
     HAL_NVIC_SetPriority((IRQn_Type)(macESP8266_USART_IRQ), 0, 0);
 		
     HAL_NVIC_EnableIRQ((IRQn_Type)(macESP8266_USART_IRQ));
 		
-		HAL_UART_Receive_IT(&ESP8266UartHandle, &strEsp8266_Fram_Record.ucTmp, 1);	//RX_BUF_MAX_LEN
-
+		HAL_UART_Receive_IT(&ESP8266UartHandle, &strEsp8266_Fram_Record.ucTmp, 1);	//enable RXNE interupt
+		
+//		__HAL_UART_ENABLE_IT(&ESP8266UartHandle, USART_IT_RXNE);	//使能串口接收中断
+		__HAL_UART_ENABLE_IT(&ESP8266UartHandle, USART_IT_IDLE);	//使能串口空闲中断
+		
+//		USART3->ICR |= 1<<4;	//清除IDLE位
+		__HAL_UART_CLEAR_IT(&ESP8266UartHandle, USART_ICR_IDLECF);
+		
 }
 
 
@@ -147,11 +148,11 @@ void ESP8266_Rst ( void )
  */
 bool ESP8266_Cmd ( char * cmd, char * reply1, char * reply2, uint32_t waittime )
 {    
-	strEsp8266_Fram_Record.InfBit.FramLength = 0;               //从新开始接收新的数据包
+	strEsp8266_Fram_Record.InfBit.FramLength = 0;     //从新开始接收新的数据包
 
-	macESP8266_Usart( "%s\r\n", cmd );			//通过USART3发送AT命令到WIFI模块
+	macESP8266_Usart( "%s\r\n", cmd );								//通过USART3发送AT命令到WIFI模块
 
-	if ( ( reply1 == 0 ) && ( reply2 == 0 ) )                      //不需要接收数据
+	if ( ( reply1 == 0 ) && ( reply2 == 0 ) )         //不需要接收数据
 		return true;
 	
 	osDelay( waittime );                 //延时
@@ -548,7 +549,7 @@ bool ESP8266_SendString ( FunctionalState enumEnUnvarnishTx, char * pStr, uint32
 		
 		ESP8266_Cmd ( cStr, "> ", 0, 100 );
 
-		PRINT_DEBUG( "[%s] %s", __FUNCTION__, pStr );
+		PRINT_INFO( "[%s] %s", __FUNCTION__, pStr );
 		
 		bRet = ESP8266_Cmd ( pStr, "SEND OK", 0, 500 );
   }

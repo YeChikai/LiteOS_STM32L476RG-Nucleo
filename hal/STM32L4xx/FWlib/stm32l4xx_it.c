@@ -189,7 +189,8 @@ void macESP8266_USART_IRQHandler(void)
 	{
     strEsp8266_Fram_Record .InfBit .FramFinishFlag = 1;
 		
-		USART3->ICR |= 1<<4;	//清除IDLE位
+		//USART3->ICR |= 1<<4;	//清除IDLE位
+		__HAL_UART_CLEAR_IT(&ESP8266UartHandle, USART_ICR_IDLECF);
   }		
 }
 

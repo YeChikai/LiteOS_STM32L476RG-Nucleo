@@ -14,8 +14,8 @@
 #include "los_demo_debug.h"
 #include "ascii.h"
  
-uint8_t OldBufferCN[32] = {0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00};
-uint8_t OldBufferEN[16] = {0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00};
+uint8_t OldBufferCN[32] = {0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t OldBufferEN[16] = {0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
  
  
 
@@ -48,11 +48,9 @@ void Elink042_DispChar_EN( uint16_t usX, uint16_t usY, const char cChar, uint16_
 	{
 		ucBuffer[ucPage] = ucAscii_1608[ ucRelativePositon ] [ ucPage ];				
 	}/* 全部写完 */
-	
-//	PRINT_DEBUG( "\r\n[%s] x_start1 = 0x%2x,	x_start2 = %d, x_end1 = 0x%2x, x_end2 = %d\r\n", __FUNCTION__, x_start1, x_start2, x_end1, x_end2 );
-//	PRINT_DEBUG( "\r\n[%s] y_start1 = 0x%2x,	y_start2 = %d, y_end1 = 0x%2x, y_end2 = %d\r\n", __FUNCTION__, y_start1, y_start2, y_end1, y_end2 );
-	
-	partial_display(x_start1, x_start2,x_end1, x_end2, y_start1, y_start2, y_end1, y_end2, OldBufferEN, ucBuffer,EN_CHAR_0816_BYTE);
+
+	partial_display(x_start1, x_start2,x_end1, x_end2, y_start1, y_start2, y_end1, y_end2, OldBufferEN, ucBuffer,EN_CHAR_0816_BYTE);	
+//	memcpy( OldBufferEN, ucBuffer, EN_CHAR_0816_BYTE );
 }
 
 /**
@@ -79,7 +77,7 @@ void Elink042_DispChar_CN ( uint16_t usX, uint16_t usY, uint16_t usChar, uint16_
   GetGBKCode( ucBuffer, usChar );	//取字模数据
 	
 	partial_display(x_start1, x_start2,x_end1, x_end2, y_start1, y_start2, y_end1, y_end2, OldBufferCN, ucBuffer, CN_CHAR_1616_BYTE);
-		
+//	memcpy( OldBufferCN, ucBuffer, CN_CHAR_1616_BYTE );	
 }
 
 
@@ -131,51 +129,67 @@ void Elink042DispChinaString( uint16_t usX, uint16_t usY, const uint8_t * pStr, 
  * @param  usColor_Background ：选择字符串的背景色
  * @retval 无
  */
-void ELINK042_DispString_EN_CH ( uint16_t usX, uint16_t usY, const uint8_t * pStr, uint16_t usColor_Background )
+void ELINK042_DispString_EN_CH( uint16_t usX, uint16_t usY, const uint8_t * pStr, uint16_t usColor_Background )
 {
 	uint16_t usCh;
 	
-	SPI4W_WRITECOM(0X50);
-	SPI4W_WRITEDATA(0x47);	//0x47 White background; 0x17 Black background
-
-	lut1();		
+	partial_clean_line(usX, usY);
 	
 	while( * pStr != '\0' )
 	{
 		if ( * pStr <= 126 )	           	//英文字符
 		{
-			if ( ( usX - ELINK042_DispWindow_X_Star + WIDTH_EN_CHAR ) > ELINK042_DispWindow_COLUMN )
+			if(*pStr == '\r' && *(pStr+1) == '\n')	//换行符处理
 			{
 				usX = ELINK042_DispWindow_X_Star;
 				usY += HEIGHT_EN_CHAR;
+				
+				pStr += 2;
+				partial_clean_line(usX, usY);
+			}
+			else
+			{
+				if ( ( usX - ELINK042_DispWindow_X_Star + WIDTH_EN_CHAR ) > ELINK042_DispWindow_COLUMN )	//行溢出，换行处理
+				{
+					usX = ELINK042_DispWindow_X_Star;
+					usY += HEIGHT_EN_CHAR;
+					
+					partial_clean_line(usX, usY);
+				}
+				
+				if ( ( usY - ELINK042_DispWindow_Y_Star + HEIGHT_EN_CHAR ) > ELINK042_DispWindow_PAGE )	//页溢出，换行处理
+				{
+					usX = ELINK042_DispWindow_X_Star;
+					usY = ELINK042_DispWindow_Y_Star;
+					
+					partial_clean_line(usX, usY);
+				}			
+			
+				Elink042_DispChar_EN( usX, usY, * pStr, usColor_Background);
+				PRINT_INFO( "\r\n[%s] English char: %c\r\n",__FUNCTION__, * pStr );
+				
+				usX += WIDTH_EN_CHAR;
+			
+				pStr++;					
 			}
 			
-			if ( ( usY - ELINK042_DispWindow_Y_Star + HEIGHT_EN_CHAR ) > ELINK042_DispWindow_PAGE )
-			{
-				usX = ELINK042_DispWindow_X_Star;
-				usY = ELINK042_DispWindow_Y_Star;
-			}			
-		
-		  Elink042_DispChar_EN( usX, usY, * pStr, usColor_Background);
-			PRINT_INFO( "\r\n[%s] English char: %c\r\n",__FUNCTION__, * pStr );
-			
-			usX += WIDTH_EN_CHAR;
-		
-		  pStr++;
-
 		}		
 		else	                            //汉字字符
 		{
-			if ( ( usX - ELINK042_DispWindow_X_Star + WIDTH_CH_CHAR ) > ELINK042_DispWindow_COLUMN )
+			if ( ( usX - ELINK042_DispWindow_X_Star + WIDTH_CH_CHAR ) > ELINK042_DispWindow_COLUMN )	//行溢出，换行处理
 			{
 				usX = ELINK042_DispWindow_X_Star;
 				usY += HEIGHT_CH_CHAR;
+				
+				partial_clean_line(usX, usY);
 			}
 			
-			if ( ( usY - ELINK042_DispWindow_Y_Star + HEIGHT_CH_CHAR ) > ELINK042_DispWindow_PAGE )
+			if ( ( usY - ELINK042_DispWindow_Y_Star + HEIGHT_CH_CHAR ) > ELINK042_DispWindow_PAGE )	//页溢出，换行处理
 			{
 				usX = ELINK042_DispWindow_X_Star;
 				usY = ELINK042_DispWindow_Y_Star;
+				
+				partial_clean_line(usX, usY);
 			}	
 			
 			usCh = * ( uint16_t * ) pStr;	
